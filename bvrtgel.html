@@ -463,7 +463,7 @@
               <th style="width:34px;"><input type="checkbox" id="checkAll" onclick="toggleAll(this)"></th>
               <th style="width:40px; text-align: center">№</th>
               <th style="text-align: center;">Ажилтны нэр</th>
-              <th style="text-align: center;">тайлбар</th>
+              <th style="text-align: center;">Албан тушаал</th>
               <th style="width:110px; text-align: center">Бүртгэл</th>
               <th style="width:120px; text-align: center">гарын үсэг</th>
               <th style="width:44px;"></th>
@@ -616,13 +616,17 @@
     } else {
       currentEntries.forEach((rec, index) => {
         const verified = isEntryVerified(rec);
+        const employee = Array.isArray(window.HTML_EMPLOYEES)
+          ? window.HTML_EMPLOYEES.find(item => String(item.name || '').trim().toLowerCase() === String(rec.name || '').trim().toLowerCase())
+          : null;
+        const position = employee ? String(employee.position || '').trim() : String(rec.remark || '').trim();
         tableBody.innerHTML += `
           <tr>
             <td><input type="checkbox" class="row-check" data-idx="${index}"></td>
             <td>${index + 1}</td>
             <td class="fw-semibold">${escapeHtml(rec.name)}</td>
             <td>
-              <input type="text" class="form-control form-control-sm" placeholder="Тайлбар..." value="${escapeHtml(rec.remark || '')}" onchange="updateField(${index},'remark',this.value)">
+              <input type="text" class="form-control form-control-sm" value="${escapeHtml(position)}" readonly>
             </td>
             <td class="small text-muted">${rec.time}</td>
             <td>${verified
@@ -961,11 +965,15 @@
         const warn = total - ok;
         const rows = s.entries.map((e, i) => {
           const eOk = isEntryVerified(e);
+          const employee = Array.isArray(window.HTML_EMPLOYEES)
+            ? window.HTML_EMPLOYEES.find(item => String(item.name || '').trim().toLowerCase() === String(e.name || '').trim().toLowerCase())
+            : null;
+          const position = employee ? String(employee.position || '').trim() : String(e.remark || '').trim();
           return `
             <tr>
               <td>${i+1}</td>
               <td class="fw-semibold">${escapeHtml(e.name)}</td>
-              <td class="small text-muted">${escapeHtml(e.remark) || '—'}</td>
+              <td class="small text-muted">${escapeHtml(position) || '—'}</td>
               <td class="small text-muted">${e.time}</td>
               <td>${eOk
                 ? '<span class="badge badge-ok"><i class="bi bi-check-circle-fill me-1"></i>Баталгаажсан</span>'
@@ -1021,6 +1029,68 @@
   renderHistory();
   updateTabCounts();
 </script>
-<script src="employee.js"></script>
+<script>
+  // Бүртгэлтэй ажилтны цорын ганц эх үүсвэр. Энд шинэ мөр нэмж бүртгэнэ.
+  window.HTML_EMPLOYEES = [
+    { id: 'EMP0001', name: 'Э.Баасанбат', position: 'ПД' },
+    { id: 'EMP0002', name: 'Б.Болд', position: 'ПДБ' },
+    { id: 'EMP0003', name: 'Я.Ганцоож', position: 'ПДБ' },
+    { id: 'EMP0004', name: 'Ф.Мөнхбаяр', position: 'ПДБ' },
+    { id: 'EMP0005', name: 'А.Түвшинжаргал', position: 'ПДБ' },
+    { id: 'EMP0006', name: 'Э.Эрдэнэсувд', position: 'ПДБ' },
+    { id: 'EMP0007', name: 'А.Мягмарсүрэн', position: 'ПДБ' },
+    { id: 'EMP0008', name: 'А.Эрдэнэсувд', position: 'пр-5' },
+    { id: 'EMP0009', name: 'А.Мягмарсүрэн', position: 'пр-5' },
+    { id: 'EMP0010', name: 'А.Мягмарсүрэн', position: 'пр-5' },
+    { id: 'EMP0011', name: 'А.Түшинжаргал', position: 'пр-5' },
+    { id: 'EMP0012', name: 'А.Мягмарсүрэн', position: 'пр-5' },
+    { id: 'EMP0013', name: 'А.Эрдэнэсувд', position: 'пр-5' },
+    { id: 'EMP0014', name: 'п.Адарсүрэн', position: 'пр-4' },
+    { id: 'EMP0015', name: 'Н.Батсүх', position: 'пр-4' },
+    { id: 'EMP0016', name: 'М.Золжаргал', position: 'пр-4' },
+    { id: 'EMP0017', name: 'Ц.Лхагвасүрэн', position: 'пр-4' },
+    { id: 'EMP0018', name: 'Н.Сүхбаатар', position: 'пр-4' },
+    { id: 'EMP0019', name: 'Б.Цэгмэд', position: 'пр-4' },
+    { id: 'EMP0020', name: 'Б.Энхбат', position: 'пр-4' },
+    { id: 'EMP0021', name: 'Ж.Энхтүвшин', position: 'пр-4' },
+    { id: 'EMP0022', name: 'Г.Банзрагч', position: 'пр-3' },
+    { id: 'EMP0023', name: 'Б.БатОчир', position: 'пр-3' },
+    { id: 'EMP0024', name: 'П.Батзориг', position: 'пр-3' },
+    { id: 'EMP0025', name: 'Г.Буяннэмэх', position: 'пр-3' },
+    { id: 'EMP0026', name: 'О.Ганбаяр', position: 'пр-3' },
+    { id: 'EMP0027', name: 'Э.Дагвадорж', position: 'пр-3' },
+    { id: 'EMP0028', name: 'Э.Даянжалба', position: 'пр-3' },
+    { id: 'EMP0029', name: 'Г.Зодов', position: 'пр-3' },
+    { id: 'EMP0030', name: 'Г.Нарантуяа', position: 'пр-3' },
+    { id: 'EMP0031', name: 'Б.Нямцэрэн', position: 'пр-3' },
+    { id: 'EMP0032', name: 'Ш.Өнөрцэцэг', position: 'пр-3' },
+    { id: 'EMP0033', name: 'А.Сумъяабаатар', position: 'пр-3' },
+    { id: 'EMP0034', name: 'С.Төрболд', position: 'пр-3' },
+    { id: 'EMP0035', name: 'Б.Цэрмаа', position: 'пр-3' },
+    { id: 'EMP0036', name: 'А.Чаминням', position: 'пр-3' },
+    { id: 'EMP0037', name: 'Х.Шатар', position: 'пр-3' },
+    { id: 'EMP0038', name: 'Т.Эрболот', position: 'пр-3' },
+    { id: 'EMP0039', name: 'Д.Лхагва', position: 'Т/З' },
+    { id: 'EMP0040', name: 'Д.Золжаргал', position: 'Г/Ж' },
+    { id: 'EMP0041', name: 'М.Мягмарханд', position: 'Г/Ж' },
+    { id: 'EMP0042', name: 'Ж.Цэрэннадмид', position: 'Г/Ж' },
+    { id: 'EMP0043', name: 'Д.Эрдэнэчимэг', position: 'Г/Ж' },
+    { id: 'EMP0044', name: 'Б.Хонгорзул', position: 'С/Ц' },
+    { id: 'EMP0045', name: 'Ц.Гочоосүрэн', position: 'Жолооч' },
+    { id: 'EMP0046', name: 'Б.Сэлэнгэ', position: 'Сахиул үйлчлэгч' },
+  ];
+  if (Array.isArray(window.HTML_EMPLOYEES)) {
+    currentEntries.forEach(function (entry) {
+      const worker = window.HTML_EMPLOYEES.find(function (item) {
+        return String(item.name || '').trim().toLowerCase() === String(entry.name || '').trim().toLowerCase();
+      });
+      if (worker) entry.remark = String(worker.position || '').trim();
+    });
+    persistCurrent();
+    renderTable();
+    renderHistory();
+  }
+</script>
+<script src="employee.js?v=20260911-2"></script>
 </body>
 </html>
