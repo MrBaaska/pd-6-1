@@ -602,6 +602,45 @@
     .main.fullscreen-main .frame-titlebar {
       display: none;
     }
+    body.video-page-mode {
+      overflow: hidden;
+    }
+    body.video-page-mode .topbar,
+    body.video-page-mode .sidebar,
+    body.video-page-mode .copyright-badge {
+      display: none;
+    }
+    body.video-page-mode .layout {
+      display: block;
+      margin-top: 0;
+      min-height: 100dvh;
+    }
+    body.video-page-mode .main {
+      position: fixed;
+      inset: 0;
+      z-index: 1100;
+      width: 100vw;
+      height: 100dvh;
+      min-height: 100dvh;
+      padding: 0;
+      overflow: hidden;
+    }
+    body.video-page-mode .dashboard,
+    body.video-page-mode .content-frame-wrap {
+      width: 100%;
+      height: 100%;
+      min-height: 0;
+      max-height: none;
+      border: 0;
+      border-radius: 0;
+      box-shadow: none;
+    }
+    body.video-page-mode #content-frame {
+      width: 100%;
+      height: 100%;
+      min-height: 0;
+      flex: 1;
+    }
     .frame-dot {
       width: 9px; height: 9px;
       border-radius: 50%;
@@ -1003,6 +1042,10 @@
         <a href="#" class="sidebar-link" id="habea-link" data-page-key="ХАБЭА-н үзлэг"><i class="fa fa-layer-group"></i>ХАБЭА-н үзлэг</a>
       </div>
 
+      <div class="sidebar-item">
+        <a href="#" class="sidebar-link" id="surgalt-link" data-page-key="Сургалт"><i class="fa fa-graduation-cap"></i>Сургалт</a>
+      </div>
+
       <div class="sidebar-divider"></div>
       <div class="sidebar-item has-sub" onclick="toggleSub(this)">
         <div class="sidebar-link"><i class="fa fa-calculator"></i> Паспортын үзлэг</div>
@@ -1061,6 +1104,8 @@
     'Ажлын бүртгэл',
     'Хурлын тэмдэглэл'
   ]);
+  const VIDEO_PAGE_KEY = 'Зааварчилгаа / Тор засагч';
+  const VIDEO_PAGE_SRC = 'https://www.youtube.com/embed/tjzEKLEMjsM';
 
   function readLastPage() {
     try {
@@ -1506,6 +1551,7 @@
       return;
     }
     main.classList.toggle('fullscreen-main', FULLSCREEN_PAGE_KEYS.has(pageKey));
+    document.body.classList.toggle('video-page-mode', pageKey === VIDEO_PAGE_KEY);
   }
 
   function getFrameContentHeight(doc) {
@@ -1660,6 +1706,9 @@
   }
 
   function resolvePageSrc(pageKey, fallbackTitle) {
+    if (pageKey === VIDEO_PAGE_KEY) {
+      return VIDEO_PAGE_SRC;
+    }
     const mappedSrc = pageMap[pageKey] || staticPageFallbacks[pageKey];
     if (mappedSrc) {
       if (mappedSrc.startsWith('./') || mappedSrc.startsWith('../') || /^https?:\/\//i.test(mappedSrc)) {
